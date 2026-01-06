@@ -1,29 +1,34 @@
-import NewHero from '@/components/about/NewHero'
-import Timeline from '@/components/about/Timeline'
-import NewEcosystemGrid from '@/components/about/NewEcosystemGrid'
-import Collaborators from '@/components/about/Collaborators'
-import NewFooter from '@/components/about/NewFooter'
-import SectionWrapper from '@/components/about/SectionWrapper'
-import SmoothScrollWrapper from '@/components/about/SmoothScrollWrapper'
-import CustomCursor from '@/components/about/CustomCursor'
+'use client';
+
+import { useLayoutEffect } from 'react';
+import { registerGSAP } from '@/lib/gsap-init';
+import HaramaHero from '@/components/about/sections/HaramaHero';
+import ProductFeaturesSection from '@/components/about/sections/ProductFeaturesSection';
+import ProblemSection from '@/components/about/sections/ProblemSection';
+import SolutionSection from '@/components/about/sections/SolutionSection';
+import ImpactSection from '@/components/about/sections/ImpactSection';
+import BeneficiariesSection from '@/components/about/sections/BeneficiariesSection';
+import TechStackSection from '@/components/about/sections/TechStackSection';
+import RoadmapSection from '@/components/about/sections/RoadmapSection';
+import CollaboratorCarousel from '@/components/about/sections/CollaboratorCarousel';
+import FeedbackSection from '@/components/about/sections/FeedbackSection';
+import CustomCursor from '@/components/about/CustomCursor';
 
 export default function AboutPage() {
+  useLayoutEffect(() => {
+    registerGSAP();
+  }, []);
+
   return (
-    <SmoothScrollWrapper>
+    <main className="bg-slate-950 min-h-screen w-full overflow-x-hidden selection:bg-azure-500/30 selection:text-azure-100">
       <CustomCursor />
-      <main className="bg-gray-50">
-        <NewHero />
-        <SectionWrapper>
-          <Timeline />
-        </SectionWrapper>
-        <SectionWrapper>
-          <NewEcosystemGrid />
-        </SectionWrapper>
-        <SectionWrapper>
-          <Collaborators />
-        </SectionWrapper>
-        <NewFooter />
-      </main>
-    </SmoothScrollWrapper>
-  )
+      <HaramaHero theme="blue" />
+      <ProductFeaturesSection />
+      <SolutionSection />
+      <ImpactSection />
+      <BeneficiariesSection />
+      <CollaboratorCarousel />
+      <FeedbackSection />
+    </main>
+  );
 }
