@@ -120,4 +120,4 @@ export default function EcosystemGrid() {
       </section>
     </SectionWrapper>
   )
-}
+}``

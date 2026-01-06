@@ -12,7 +12,21 @@ export default function Collaborators() {
   const collaboratorsRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    return () => {}
+    const ctx = gsap.context(() => {
+      gsap.from('.collaborator-card', {
+        opacity: 0,
+        y: 80,
+        duration: 1,
+        stagger: 0.2,
+        ease: 'power3.out',
+        scrollTrigger: {
+          trigger: collaboratorsRef.current,
+          start: 'top 70%'
+        }
+      })
+    }, collaboratorsRef)
+
+    return () => ctx.revert()
   }, [])
 
   const collaborators = [
@@ -39,7 +53,7 @@ export default function Collaborators() {
   ]
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section ref={collaboratorsRef} className="py-20 bg-gray-50">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Collaborators</h2>
@@ -50,12 +64,11 @@ export default function Collaborators() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
           {collaborators.map((person, index) => (
-            <div key={index} className="collaborator-card bg-white p-6 rounded-2xl shadow-sm">
+            <div key={index} className="collaborator-card bg-white p-6 rounded-2xl shadow-sm hover:shadow-lg transition-shadow">
               <div className="mb-4">
                 <h3 className="text-lg font-bold text-slate-900 mb-1">{person.name}</h3>
                 <p className="text-orange-500 text-sm font-medium">{person.role}</p>
               </div>
-              
               <blockquote className="text-slate-600 text-sm leading-relaxed italic">
                 "{person.quote}"
               </blockquote>

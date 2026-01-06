@@ -21,22 +21,23 @@ export default function SectionWrapper({ children, className = '', id }: Section
     const ctx = gsap.context(() => {
       gsap.fromTo(sectionRef.current, 
         {
+          rotateX: 15,
+          y: 100,
           opacity: 0,
-          rotateX: 10,
-          y: 50,
-          scale: 0.95,
+          scale: 0.9,
           transformOrigin: 'top center'
         },
         {
-          opacity: 1,
           rotateX: 0,
           y: 0,
+          opacity: 1,
           scale: 1,
-          duration: 1,
-          ease: 'power3.out',
+          ease: 'power4.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 80%'
+            start: 'top 85%',
+            end: 'top 50%',
+            scrub: 1
           }
         }
       )
