@@ -14,8 +14,8 @@ export default function CustomCursor() {
 
     gsap.set(cursor, { xPercent: -50, yPercent: -50, force3D: true })
 
-    const xTo = gsap.quickTo(cursor, 'x', { duration: 0.5, ease: 'power3.out' })
-    const yTo = gsap.quickTo(cursor, 'y', { duration: 0.5, ease: 'power3.out' })
+    const xTo = gsap.quickTo(cursor, 'x', { duration: 1.2, ease: 'power3.out' })
+    const yTo = gsap.quickTo(cursor, 'y', { duration: 1.2, ease: 'power3.out' })
 
     const moveCursor = (e: MouseEvent) => {
       xTo(e.clientX)
@@ -26,11 +26,11 @@ export default function CustomCursor() {
 
     // 🔗 Grow only on interactive elements
     const hoverIn = () => {
-      gsap.to(inner, { scale: 1.4, duration: 0.25, ease: 'back.out(1.6)' })
+      gsap.to(inner, { scale: 1.4, duration: 0.5, ease: 'back.out(1.6)' })
     }
 
     const hoverOut = () => {
-      gsap.to(inner, { scale: 1, duration: 0.25, ease: 'power2.out' })
+      gsap.to(inner, { scale: 1, duration: 0.5, ease: 'power2.out' })
     }
 
     // 🧲 Magnetic effect
@@ -73,11 +73,11 @@ export default function CustomCursor() {
 
     // 📝 Text cursor hint
     const textEnter = () => {
-      gsap.to(inner, { scale: 0.6, duration: 0.2 })
+      gsap.to(inner, { scale: 0.6, duration: 0.3 })
     }
 
     const textLeave = () => {
-      gsap.to(inner, { scale: 1, duration: 0.2 })
+      gsap.to(inner, { scale: 1, duration: 0.3 })
     }
 
     const interactive = document.querySelectorAll('a, button, [role="button"]')
@@ -86,7 +86,6 @@ export default function CustomCursor() {
     interactive.forEach(el => {
       el.addEventListener('mouseenter', hoverIn)
       el.addEventListener('mouseleave', hoverOut)
-      // el.addEventListener('mousemove', magneticMove)
       el.addEventListener('mouseleave', magneticLeave)
     })
 
@@ -98,13 +97,24 @@ export default function CustomCursor() {
     return () => {
       window.removeEventListener('mousemove', moveCursor)
       window.removeEventListener('mousedown', clickRipple)
+      
+      interactive.forEach(el => {
+        el.removeEventListener('mouseenter', hoverIn)
+        el.removeEventListener('mouseleave', hoverOut)
+        el.removeEventListener('mouseleave', magneticLeave)
+      })
+      
+      textElements.forEach(el => {
+        el.removeEventListener('mouseenter', textEnter)
+        el.removeEventListener('mouseleave', textLeave)
+      })
     }
   }, [])
 
   return (
     <div
       ref={cursorRef}
-      className="fixed top-0 left-0 w-3 h-3 pointer-events-none z-50 hidden md:block"
+      className="fixed top-0 left-0 w-3 h-3 pointer-events-none z-[9999] hidden md:block"
     >
       <div
         ref={cursorInnerRef}

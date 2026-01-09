@@ -3,13 +3,14 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
-import { ChevronUp, ChevronDown, Github, Linkedin, Twitter } from 'lucide-react';
+import { ChevronUp, ChevronDown, Github, Linkedin, Twitter, Quote } from 'lucide-react';
 import Image from 'next/image';
 
 interface TeamMember {
   id: number;
   name: string;
   role: string;
+  quote: string;
   image: string;
   socials?: {
     github?: string;
@@ -18,33 +19,38 @@ interface TeamMember {
   };
 }
 
+// Updated Team Data with Specific Roles
 const teamMembers: TeamMember[] = [
   { 
     id: 1, 
     name: "Santhosh P", 
-    role: "Founder & Visionary",
-    image: "/avatars/team/placeholder.png",
+    role: "Back End Developer",
+    quote: "Complexity wrapped in simplicity.",
+    image: "/charizard.jpg",
     socials: { linkedin: "#", twitter: "#" }
   },
   { 
     id: 2, 
     name: "Sakthivasan S", 
-    role: "Creative Director",
-    image: "/avatars/team/placeholder.png",
+    role: "AI & Cloud Developer",
+    quote: "Reliability is our currency.",
+    image: "/swadloon.jpg",
     socials: { linkedin: "#", github: "#" }
   },
   { 
     id: 3, 
     name: "Hrithik Sankar R", 
-    role: "Lead Developer",
-    image: "/avatars/team/placeholder.png",
+    role: "Front End Developer",
+    quote: "AI that feels as simple as checking a box.",
+    image: "/025.png",
     socials: { github: "#", linkedin: "#" }
   },
   { 
     id: 4, 
     name: "Uganthan M", 
-    role: "Senior Developer",
-    image: "/avatars/team/placeholder.png",
+    role: "UI/UX Designer",
+    quote: "Fairness engineered into the code.",
+    image: "/throh.png",
     socials: { linkedin: "#" }
   },
 ];
@@ -84,19 +90,19 @@ export default function CollaboratorCarousel() {
     if (textRef.current) {
       const nameEl = textRef.current.querySelector('.member-name');
       const roleEl = textRef.current.querySelector('.member-role');
+      const quoteEl = textRef.current.querySelector('.member-quote');
       const socialEl = textRef.current.querySelector('.member-socials');
 
-      tl.to([nameEl, roleEl, socialEl], {
+      tl.to([nameEl, roleEl, quoteEl, socialEl], {
         y: -20,
         opacity: 0,
         stagger: 0.05,
         duration: 0.3,
         onComplete: () => {
-          // Reset position for entry
-          gsap.set([nameEl, roleEl, socialEl], { y: 20 });
+          gsap.set([nameEl, roleEl, quoteEl, socialEl], { y: 20 });
         }
       })
-      .to([nameEl, roleEl, socialEl], {
+      .to([nameEl, roleEl, quoteEl, socialEl], {
         y: 0,
         opacity: 1,
         stagger: 0.1,
@@ -113,7 +119,7 @@ export default function CollaboratorCarousel() {
       
       if (offset > total / 2) offset -= total;
       
-      const ySpacing = 140; // px
+      const ySpacing = 140; 
       const scaleBase = 1;
       const scaleStep = 0.15;
       const opacityBase = 1;
@@ -127,7 +133,7 @@ export default function CollaboratorCarousel() {
       const targetScale = Math.max(0.5, scaleBase - (absOffset * scaleStep));
       const targetOpacity = Math.max(0, opacityBase - (absOffset * opacityStep));
       const targetZ = zIndexBase - absOffset;
-      const targetBlur = absOffset * 2; // Reduced blur for light mode
+      const targetBlur = absOffset * 2; 
 
       gsap.to(card, {
         y: targetY,
@@ -184,8 +190,8 @@ export default function CollaboratorCarousel() {
     <section ref={containerRef} className="relative py-32 min-h-[90vh] bg-white text-slate-900 overflow-hidden flex items-center justify-center">
       {/* Background Ambience */}
       <div className="absolute inset-0 bg-white">
-        <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-brand-hero-secondary/5 rounded-full blur-[100px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-hero-tertiary/5 rounded-full blur-[100px]" />
+        <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-slate-100 rounded-full blur-[100px]" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-50 rounded-full blur-[100px]" />
       </div>
 
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12 relative z-10">
@@ -199,23 +205,31 @@ export default function CollaboratorCarousel() {
                 </h3>
             </div>
             <div className="overflow-hidden">
-                <p className="member-role text-xl md:text-2xl text-brand-hero-tertiary font-light tracking-wide">
+                <p className="member-role text-xl md:text-2xl text-orange-500 font-light tracking-wide uppercase">
                 {activeMember.role}
                 </p>
             </div>
+            
+            <div className="overflow-hidden relative pl-4 border-l-2 border-orange-200">
+               <Quote className="absolute -top-2 -left-2 w-4 h-4 text-orange-300 fill-orange-300 opacity-50" />
+               <p className="member-quote text-lg md:text-xl text-slate-600 font-light italic leading-relaxed">
+                 "{activeMember.quote}"
+               </p>
+            </div>
+
             <div className="member-socials flex gap-4 pt-4">
                {activeMember.socials?.github && (
-                   <a href={activeMember.socials.github} className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-600 hover:text-brand-hero-primary">
+                   <a href={activeMember.socials.github} className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-600 hover:text-orange-500">
                        <Github size={20} />
                    </a>
                )}
                {activeMember.socials?.linkedin && (
-                   <a href={activeMember.socials.linkedin} className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-600 hover:text-brand-hero-primary">
+                   <a href={activeMember.socials.linkedin} className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-600 hover:text-orange-500">
                        <Linkedin size={20} />
                    </a>
                )}
                {activeMember.socials?.twitter && (
-                   <a href={activeMember.socials.twitter} className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-600 hover:text-brand-hero-primary">
+                   <a href={activeMember.socials.twitter} className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 transition-colors text-slate-600 hover:text-orange-500">
                        <Twitter size={20} />
                    </a>
                )}
@@ -232,7 +246,7 @@ export default function CollaboratorCarousel() {
                     <button 
                         key={idx}
                         onClick={() => !isAnimating && setActiveIndex(idx)}
-                        className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === activeIndex ? 'w-8 bg-brand-hero-primary' : 'bg-slate-300 hover:bg-slate-400'}`}
+                        className={`w-2 h-2 rounded-full transition-all duration-300 ${idx === activeIndex ? 'w-8 bg-orange-500' : 'bg-slate-300 hover:bg-slate-400'}`}
                     />
                 ))}
             </div>
@@ -262,15 +276,15 @@ export default function CollaboratorCarousel() {
                         src={member.image}
                         alt={member.name}
                         fill
-                        className="object-cover"
+                        className="object-cover "
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
                  </div>
 
                  {/* Card overlay content */}
                  <div className="card-inner-text absolute bottom-6 left-6 right-6 opacity-0">
                      <span className="text-xs font-mono text-white/90 uppercase tracking-widest block mb-1 drop-shadow-md">
-                         Collab #{String(member.id).padStart(2, '0')}
+                         {member.role.split(' ')[0]} // {member.name.split(' ')[0]}
                      </span>
                  </div>
                </div>

@@ -27,7 +27,6 @@ export default function HaramaHero({ theme = "blue" }: HaramaHeroProps) {
       const heroContent = container.querySelector(".hero__content");
       const heroTitleChars = container.querySelectorAll(".hero__title-char");
       const heroSubtitle = container.querySelector(".hero__subtitle");
-      const navbar = container.querySelector(".hero__navbar");
 
       const tl = gsap.timeline({
         defaults: { ease: "expo.inOut" },
@@ -116,15 +115,6 @@ export default function HaramaHero({ theme = "blue" }: HaramaHeroProps) {
           tl.set(heroContent, { visibility: "visible" }, "< 0.5");
       }
 
-      // Navbar slides down
-      if (navbar) {
-        tl.fromTo(navbar, 
-          { y: -100, opacity: 0 },
-          { y: 0, opacity: 1, duration: 1, ease: "power3.out" },
-          "-=0.5"
-        );
-      }
-
       // Hero Title "HARAMA" characters slide up
       if (heroTitleChars.length) {
         tl.fromTo(heroTitleChars,
@@ -195,19 +185,6 @@ export default function HaramaHero({ theme = "blue" }: HaramaHeroProps) {
       {/* --- HERO LAYER (Revealed after loader) --- */}
       <div className="hero__content absolute inset-0 z-40 flex flex-col justify-between invisible bg-white bg-grid-pattern">
         
-        {/* Navigation */}
-        <nav className="hero__navbar flex justify-between items-center px-8 py-6 w-full max-w-7xl mx-auto text-slate-700">
-          <div className="text-2xl font-bold tracking-tight text-slate-900">HARAMA</div>
-          <div className="hidden md:flex gap-8 font-medium">
-            <a href="/" className="hover:text-brand-hero-primary transition-colors">Home</a>
-            <a href="/about" className="hover:text-brand-hero-primary transition-colors">About</a>
-            <a href="#vision" className="hover:text-brand-hero-primary transition-colors">Vision</a>
-          </div>
-          <a href="#contact" className="px-5 py-2 border border-slate-200 rounded-full hover:bg-slate-50 transition-colors text-sm font-medium text-slate-900 bg-white shadow-sm">
-            Contact Us
-          </a>
-        </nav>
-
         {/* Main Hero Text */}
         <div className="flex-1 flex flex-col items-center justify-center text-center px-4 relative">
              {/* Background Blob for vibrancy */}

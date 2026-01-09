@@ -1,84 +1,141 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import Image from 'next/image';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// Shared Typography Styles to ensure perfect alignment
+const TITLE_STYLE = "text-[18vw] font-black text-[#111827] leading-none tracking-tighter";
+const TITLE_STYLE_CLARITY = "text-[18vw] font-black text-[#0e7490] leading-none tracking-tighter";
+const SUBTITLE_STYLE = "font-bold tracking-[0.3em] uppercase text-sm md:text-xl mt-6 text-[#0e7490]";
+
+// --- 1. THE CHAOS GROUP ---
+const ChaosGroup = ({ numberRef }: { numberRef: React.RefObject<HTMLSpanElement | null> }) => (
+  <div className="chaos-group absolute inset-0 flex flex-col items-center justify-center z-10 pb-20">
+    
+    {/* TEXT CONTAINER - Perfectly Centered */}
+    <div className="relative text-center flex flex-col items-center">
+      <h3 className={TITLE_STYLE}>
+        CHAOS
+      </h3>
+      <p className={SUBTITLE_STYLE}>
+        MANUAL • SLOW • BIASED
+      </p>
+    </div>
+
+    {/* EXTRAS - Absolute positioning so they don't push the text */}
+    <div className="absolute bottom-20 flex flex-col items-center">
+        <span ref={numberRef} className="text-8xl font-black tracking-tighter text-[#6B7280]">
+          0%
+        </span>
+        <p className="text-[#9CA3AF] font-bold tracking-widest mt-2 text-xs uppercase">Processing...</p>
+    </div>
+  </div>
+);
+
+// --- 2. THE CLARITY GROUP ---
+const ClarityGroup = () => {
+  const stats = [
+    { value: "80%", label: "Time Saved" },
+    { value: "99%", label: "Accuracy" },
+    { value: "24/7", label: "Availability" },
+  ];
+
+  return (
+    <div className="clarity-group absolute inset-0 flex flex-col items-center justify-center z-10 opacity-0 pointer-events-none pb-20">
+      
+      {/* TEXT CONTAINER - Matches Chaos Structure Exactly */}
+      <div className="relative text-center flex flex-col items-center">
+        <h3 className={TITLE_STYLE_CLARITY}>
+            CLARITY
+        </h3>
+        <p className={SUBTITLE_STYLE}>
+            VISION • FOCUS • SPEED
+        </p>
+      </div>
+
+      {/* EXTRAS - Absolute positioning matches Chaos Counter location */}
+      <div className="absolute bottom-20 flex justify-center gap-12 md:gap-24">
+        {stats.map((stat, index) => (
+          <div key={index} className="impact-stat text-center opacity-0 translate-y-8">
+            <h4 className="text-4xl md:text-6xl font-bold text-[#111827] mb-2">{stat.value}</h4>
+            <p className="text-[10px] md:text-sm uppercase tracking-widest text-[#0e7490] font-bold">{stat.label}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// --- 3. MAIN COMPONENT ---
 export default function ImpactSection() {
   const containerRef = useRef<HTMLDivElement>(null);
-  
+  const numberRef = useRef<HTMLSpanElement>(null);
+
   useGSAP(() => {
-    gsap.to(".after-image", {
-      clipPath: "inset(0 0 0 0)",
-      ease: "none",
+    const percentageProxy = { value: 0 };
+
+    const tl = gsap.timeline({
       scrollTrigger: {
         trigger: containerRef.current,
         start: "top top",
-        end: "+=100%", // Pin for screen height
+        end: "+=200%", // Increased pin distance for more scroll 
         pin: true,
-        scrub: true,
+        scrub: 1,
       }
     });
 
-    gsap.from(".impact-stat", {
-        y: 50,
-        opacity: 0,
-        stagger: 0.2,
-        scrollTrigger: {
-            trigger: ".stats-container",
-            start: "top 80%",
+    // --- PHASE 1: Count up ---
+    tl.to(percentageProxy, {
+      value: 80,
+      duration: 2, // Reduced duration to make this part scroll faster
+      ease: "linear",
+      onUpdate: () => {
+        if (numberRef.current) {
+          numberRef.current.textContent = Math.floor(percentageProxy.value).toString() + "%";
         }
-    })
+      },
+    }, 0);
+
+    // --- PHASE 2: The Swap ---
+    // Make the swap nearly instant at the 80% mark (t=4)
+    tl.to(".chaos-group", {
+        opacity: 0,
+        duration: 0.2, 
+        ease: "power1.inOut"
+    }, "4"); 
+
+    // Fade in CLARITY at the same time
+    tl.to(".clarity-group", {
+        opacity: 1,
+        pointerEvents: "auto",
+        duration: 0.2, 
+        ease: "power1.inOut"
+    }, "4"); 
+
+    // --- PHASE 3: Stats Reveal ---
+    // Starts immediately after the swap
+    tl.to(".impact-stat", {
+      opacity: 1,
+      y: 0,
+      stagger: 0.1,
+      duration: 0.4, 
+      ease: 'back.out(1.7)',
+    }, "4.2");
+
+    // --- PHASE 4: Hold ---
+    // Add an empty tween to extend the timeline, creating a pause at the end.
+    tl.to({}, { duration: 1.5 });
+
   }, { scope: containerRef });
 
   return (
-    <section ref={containerRef} className="relative h-screen overflow-hidden bg-stone-100">
-      
-      {/* Before Image (Manual Grading) - Chaos */}
-      <div className="absolute inset-0 flex items-center justify-center bg-stone-100">
-          <div className="text-center opacity-40">
-              <h3 className="text-[10vw] font-bold text-red-900 leading-none blur-[2px]">CHAOS</h3>
-              <p className="text-2xl text-red-800 font-serif italic">Manual • Slow • Biased</p>
-          </div>
-          {/* Chaotic pattern */}
-          <div className="absolute inset-0 bg-[repeating-linear-gradient(45deg,transparent,transparent_10px,#e7e5e4_10px,#e7e5e4_20px)] opacity-50" />
-      </div>
-
-      {/* After Image (AI Grading) - Clarity / White */}
-      <div className="after-image absolute inset-0 flex items-center justify-center bg-white [clip-path:inset(0_100%_0_0)]">
-           <div className="text-center z-10">
-              <h3 className="text-[10vw] font-bold text-brand-impact-text leading-none tracking-tight">CLARITY</h3>
-              <p className="text-2xl text-brand-impact-accent font-medium">AI Powered • Instant • Fair</p>
-          </div>
-           {/* Clean, subtle Indigo gradient */}
-           <div className="absolute inset-0 bg-gradient-to-br from-indigo-50/50 via-white to-white" />
-           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-indigo-100/40 via-transparent to-transparent" />
-      </div>
-      
-      {/* Divider */}
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-0.5 h-full bg-indigo-500/20" />
-      </div>
-
-      {/* Floating Content */}
-      <div className="stats-container absolute bottom-20 left-0 right-0 flex justify-center gap-20 z-20">
-          <div className="impact-stat text-center">
-              <h4 className="text-5xl font-bold text-slate-900 mb-2">80%</h4>
-              <p className="text-sm uppercase tracking-widest text-brand-impact-accent font-bold">Time Saved</p>
-          </div>
-          <div className="impact-stat text-center">
-              <h4 className="text-5xl font-bold text-slate-900 mb-2">24/7</h4>
-              <p className="text-sm uppercase tracking-widest text-brand-impact-accent font-bold">Availability</p>
-          </div>
-           <div className="impact-stat text-center">
-              <h4 className="text-5xl font-bold text-slate-900 mb-2">0%</h4>
-              <p className="text-sm uppercase tracking-widest text-brand-impact-accent font-bold">Bias</p>
-          </div>
-      </div>
+    <section ref={containerRef} className="relative h-screen w-full overflow-hidden bg-[#FFF0DC]">
+      <ChaosGroup numberRef={numberRef} />
+      <ClarityGroup />
     </section>
   );
 }

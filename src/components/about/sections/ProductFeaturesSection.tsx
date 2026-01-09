@@ -87,7 +87,7 @@ const features: FeatureCard[] = [
       iconColor: "text-teal-200",
       pillBg: "bg-teal-500/20",
       pillText: "text-teal-100",
-      pillBorder: "border-teal-500/30",
+      pillBorder: "border-teal-500/30 ",
       decoration: "bg-teal-500/10",
       shadow: "shadow-teal-900/50",
     }
@@ -152,7 +152,7 @@ export default function ProductFeaturesSection() {
   }, [])
 
   return (
-    <section id="features" ref={containerRef} className="relative w-full bg-slate-950">
+    <section id="features" ref={containerRef} className="relative w-full  mr-10 bg-black">
       {features.map((feature, idx) => (
         <div
           key={idx}
