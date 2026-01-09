@@ -143,9 +143,9 @@ export default function BeneficiariesSection() {
                     <div className={`relative h-full p-8 rounded-[2rem] border transition-all duration-300 hover:-translate-y-2 hover:shadow-xl flex flex-col ${b.theme.bg} ${b.theme.border} ${b.theme.shadow}`}>
                         
                         {/* Large Background Text */}
-                        <div className={`absolute -bottom-4 -right-4 text-7xl font-black select-none pointer-events-none opacity-100 overflow-hidden ${b.theme.bgText}`}>
+                        {/* <div className={`absolute -bottom-4 -right-4 text-7xl font-black select-none pointer-events-none opacity-100 overflow-hidden ${b.theme.bgText}`}>
                             {b.title.toUpperCase()}
-                        </div>
+                        </div> */}
 
                         {/* Icon */}
                         <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 shadow-sm ${b.theme.iconBg} ${b.theme.iconColor}`}>
