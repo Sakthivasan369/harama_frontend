@@ -90,7 +90,7 @@ export default function ImpactSection() {
 
     // --- PHASE 1: Count up ---
     tl.to(percentageProxy, {
-      value: 80,
+      value: 98,
       duration: 2, // Reduced duration to make this part scroll faster
       ease: "linear",
       onUpdate: () => {
